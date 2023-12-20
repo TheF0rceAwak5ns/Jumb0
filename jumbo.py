@@ -1,8 +1,37 @@
 import requests
 import argparse
+from bs4 import BeautifulSoup
 
-def login(user, password, url):
-    urll = url
+# WORDPRESS
+
+# JOOMLA
+def getHiddenValues(url):
+    
+    response = requests.get(f"{url}/index.php")
+    
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        hidden_inputs = soup.find_all('input', {'type': 'hidden'})
+        
+        hidden_values = {}
+        
+        for input_tag in hidden_inputs:
+            name = input_tag.get('name', '')
+            value = input_tag.get('value', '')
+            
+            if value == '1':
+                hidden_values[value] = name
+            else:    
+                hidden_values[name] = value
+            
+        print(f"HIDDEN VALUES: {hidden_values}")
+        return hidden_values
+    
+    else:
+        print(f"Error: {url} Status code: {response.status_code}")
+        return {}    
+
     data = {
         'log': user,
         'pwd': password,
