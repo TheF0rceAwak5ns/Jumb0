@@ -64,9 +64,11 @@ def main():
 
     if args.mode:
         if args.mode == 'wordpress':
-            print('Mode: wordpress')
+            print('[+] Mode: wordpress')
         elif args.mode == 'joomla':
-            print('Mode: joomla')
+            print('[+] Mode: joomla')
+            hidden_values = getHiddenValues(args.url)
+            postLoginJoomla(args.username, args.password, args.url, hidden_values)
     else:
         print("No CMS mode specified. Please choose a CMS mode: wordpress or joomla.")
 
