@@ -10,11 +10,16 @@ def login(user, password, url):
         'testcookie': '1'
     }  
     r = requests.post(url=urll, data=data)
-    text = r.text
-    print(r.text)
+    status = r.status_code
+    if status == 200:  
+        get = requests.get(f'{url}/wp-admin/index.php')
+        print(get.status_code)
+        return True
+    else: 
+        return False
 
 
 user = input('enter wp user: ')
-Password = input('enter wp pass: ')
+password = input('enter wp pass: ')
 url = input('enter wp url: ')
-login(user, Password, url) 
+login(user, password, url) 
