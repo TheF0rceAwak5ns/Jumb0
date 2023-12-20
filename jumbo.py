@@ -1,7 +1,7 @@
 import requests
 
 def login(user, password, url):
-    urll = url
+    urll = f'{url}/wp-login.php'
     data = {
         'log': user,
         'pwd': password,
@@ -14,6 +14,7 @@ def login(user, password, url):
     print(r.text)
 
 
-login('admin', 'Jumb0%40Ice', 'http://192.168.5.45/wp-login.php')
-
-    
+user = input('enter wp user: ')
+Password = input('enter wp pass: ')
+url = input('enter wp url: ')
+login(user, Password, url) 
