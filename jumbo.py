@@ -22,7 +22,7 @@ def login(user, password, url):
 #def write_shell(): 
 
 # send request to connet 
-login_wp = login('admin', 'Jumb0%40Ice', 'http://192.168.4.54/')
+
 print(login_wp)
 
 
