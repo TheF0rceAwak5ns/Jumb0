@@ -8,8 +8,14 @@ from bs4 import BeautifulSoup
 
 # GET HIDDEN VALUES FROM /index.php IN JOOMLA
 def getHiddenValues(url):
-    
-    response = requests.get(f"{url}/administrator/index.php")
+    try:
+        response = requests.get(f"{url}/administrator/index.php")
+    except requests.exceptions.MissingSchema:
+        print("[-] Please specify a correct ip")
+        print("Exit 🐘")
+        sys.exit(1)
+    except TypeError:
+        print("The URL is None. Please provide a valid URL.")
     
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
