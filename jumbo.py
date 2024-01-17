@@ -26,6 +26,7 @@ def warning():
 
 # GET HIDDEN VALUES FROM /index.php IN JOOMLA
 def get_hidden_values(url):
+    # Todo : refactor this piece of code, the try need to have all the conditions in it (if = 200 etc..)
     try:
         response = requests.get(f"{url}/administrator/index.php")
     except requests.exceptions.MissingSchema:
@@ -170,6 +171,7 @@ def main():
     parser.add_argument('-u', '--username', dest='username', help='username')
     parser.add_argument('-p', '--password', dest='password', help='password')
     parser.add_argument('-H', '--host', dest='host', help='CMS website HOST')
+    # TODO : add option to change the USER-AGENT ?
 
     args = parser.parse_args()
 
