@@ -12,6 +12,8 @@ def tool_entry():
 def ongoing():
     return console.print("[*]", style="bold blue")
 
+def success():
+    return console.print("[+]", style="bold green")
 
 # WORDPRESS
 
