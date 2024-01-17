@@ -15,6 +15,9 @@ def ongoing():
 def success():
     return console.print("[+]", style="bold green")
 
+def failed():
+    return console.print("[-]", style="bold red")
+
 def warning():
     return console.print("[!]", style="bold yellow")
 # WORDPRESS
