@@ -1,7 +1,16 @@
 import sys
 import requests
 import argparse
+from rich.console import Console
 from bs4 import BeautifulSoup
+console = Console()
+
+# State with colors
+# Todo : put this in POO class message.entry message.success etc.. for practice and good code
+def tool_entry():
+    return console.print("[u]Jumbo[/u] >", style="bold")
+def ongoing():
+    return console.print("[*]", style="bold blue")
 
 
 # WORDPRESS
